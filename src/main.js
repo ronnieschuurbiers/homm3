@@ -201,7 +201,8 @@ class BattlefieldScene extends Phaser.Scene {
     for (const spr of this.tileSpr) spr.destroy();
     this.tileSpr = [];
 
-    // Scale so the Kenney tile (natural circumradius 70 px) fits our HEX_SIZE
+    // Kenney tiles are designed for a pointy-top hex with circumradius 70 px
+    // (natural image height 140 px = 2 × 70). Divide by 70 to map to our HEX_SIZE.
     const tileScale = HEX_SIZE / 70;
 
     // Tile name sets: two grass variants for alternating cells, with occasional
@@ -213,7 +214,8 @@ class BattlefieldScene extends Phaser.Scene {
       for (let col = 0; col < COLS; col += 1) {
         const { x, y } = tileCenter(col, row);
 
-        // Pick a tile variant deterministically from position
+        // Multipliers 3 and 7 are coprime to COLS and ROWS, distributing the
+        // three variants evenly across columns and rows without obvious striping.
         const varIdx = (col * 3 + row * 7) % 3;
         const frameName = (col + row) % 2 === 0 ? TILE_A[varIdx] : TILE_B[varIdx];
 
