@@ -2,22 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HoMM3 Battlefield Skeleton</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>HoMM3 Battle</title>
     <style>
       :root {
         color-scheme: dark;
       }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
       body {
         margin: 0;
-        font-family: Arial, sans-serif;
+        padding: 0;
         background: #0e1626;
+        overflow: hidden;
+        touch-action: none;
       }
       #game {
-        width: 100vw;
-        height: 100vh;
-        display: grid;
-        place-items: center;
+        width: 100dvw;
+        height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     </style>
   </head>
