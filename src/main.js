@@ -48,7 +48,7 @@ class BattlefieldScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.setBackgroundColor("#1e2e1f");
-    this.add.text(20, 18, "HoMM3 Battlefield Skeleton", {
+    this.add.text(20, 18, "HoMM III Battlefield Skeleton", {
       fontFamily: "Arial",
       fontSize: "24px",
       color: "#f0f0f0",
