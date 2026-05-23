@@ -8,6 +8,7 @@ const HEX_HEIGHT_STEP = HEX_SIZE * 1.5;
 const BOARD_ORIGIN_X = 110;
 const BOARD_ORIGIN_Y = 95;
 const UNIT_RADIUS = 14;
+const UNIT_CLICK_TOLERANCE = 6;
 
 const UNITS = [
   { id: "A1", side: "blue", col: 1, row: 2 },
@@ -142,7 +143,9 @@ class BattlefieldScene extends Phaser.Scene {
 
   findUnitAt(x, y) {
     return this.units.find(
-      (unit) => Phaser.Math.Distance.Between(x, y, unit.marker.x, unit.marker.y) <= UNIT_RADIUS + 6,
+      (unit) =>
+        Phaser.Math.Distance.Between(x, y, unit.marker.x, unit.marker.y) <=
+        UNIT_RADIUS + UNIT_CLICK_TOLERANCE,
     );
   }
 
