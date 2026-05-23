@@ -143,9 +143,11 @@ function recalcCount(unit) {
 class BattlefieldScene extends Phaser.Scene {
   constructor() {
     super("BattlefieldScene");
+    this.tileLayer = null;
     this.hexLayer = null;
     this.highlightLayer = null;
     this.unitLayer = null;
+    this.tileSpr = [];
 
     this.units = [];
     this.currentTurn = "blue"; // 'blue' | 'red'
@@ -164,10 +166,19 @@ class BattlefieldScene extends Phaser.Scene {
   }
 
   // ── Lifecycle ────────────────────────────────────────────────────
+  preload() {
+    this.load.atlasXML(
+      "terrain",
+      "assets/hexagonTerrain_sheet.png",
+      "assets/hexagonTerrain_sheet.xml",
+    );
+  }
+
   create() {
     this.cameras.main.setBackgroundColor("#0e1626");
 
-    // Rendering layers (order: grid → highlights → units)
+    // Rendering layers (order: tiles → grid outlines → highlights → units)
+    this.tileLayer = this.add.layer();
     this.hexLayer = this.add.graphics();
     this.highlightLayer = this.add.graphics();
     this.unitLayer = this.add.layer();
@@ -185,14 +196,37 @@ class BattlefieldScene extends Phaser.Scene {
   // ── Grid ─────────────────────────────────────────────────────────
   buildGrid() {
     this.hexLayer.clear();
-    this.hexLayer.lineStyle(1, 0x5a7a50, 0.45);
+
+    // Destroy any previously created tile sprites (e.g. on scene restart)
+    for (const spr of this.tileSpr) spr.destroy();
+    this.tileSpr = [];
+
+    // Kenney tiles are designed for a pointy-top hex with circumradius 70 px
+    // (natural image height 140 px = 2 × 70). Divide by 70 to map to our HEX_SIZE.
+    const tileScale = HEX_SIZE / 70;
+
+    // Tile name sets: two grass variants for alternating cells, with occasional
+    // decoration tiles for natural-looking variety.
+    const TILE_A = ["grass_01.png", "grass_03.png", "grass_05.png"];
+    const TILE_B = ["grass_02.png", "grass_04.png", "grass_06.png"];
+
     for (let row = 0; row < ROWS; row += 1) {
       for (let col = 0; col < COLS; col += 1) {
         const { x, y } = tileCenter(col, row);
-        const shade = (col + row) % 2 === 0 ? 0x2a4a2e : 0x243f28;
-        this.hexLayer.fillStyle(shade, 0.55);
+
+        // Multipliers 3 and 7 are coprime to COLS and ROWS, distributing the
+        // three variants evenly across columns and rows without obvious striping.
+        const varIdx = (col * 3 + row * 7) % 3;
+        const frameName = (col + row) % 2 === 0 ? TILE_A[varIdx] : TILE_B[varIdx];
+
+        const spr = this.add.image(x, y, "terrain", frameName);
+        spr.setScale(tileScale);
+        this.tileLayer.add(spr);
+        this.tileSpr.push(spr);
+
+        // Thin outline for tactical grid readability
         const pts = hexPoints(x, y, HEX_SIZE);
-        this.hexLayer.fillPoints(pts, true);
+        this.hexLayer.lineStyle(1, 0x000000, 0.25);
         this.hexLayer.strokePoints(pts, true);
       }
     }
