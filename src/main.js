@@ -4,13 +4,13 @@
 // ═══════════════════════════════════════════════════════════════════
 
 // ── Canvas / grid ─────────────────────────────────────────────────
-const GAME_WIDTH = 390;
-const GAME_HEIGHT = 844;
+const GAME_WIDTH = window.innerWidth;
+const GAME_HEIGHT = window.innerHeight;
 const COLS = 7;
 const ROWS = 11;
-const HEX_SIZE = 28;
-const HEX_WIDTH = Math.sqrt(3) * HEX_SIZE; // ≈ 48.5
-const HEX_HEIGHT_STEP = HEX_SIZE * 1.5; // 42
+const HEX_SIZE = 22;
+const HEX_WIDTH = Math.sqrt(3) * HEX_SIZE; // ≈ 38.1
+const HEX_HEIGHT_STEP = HEX_SIZE * 1.5; // 33
 
 // Centre the grid horizontally: equal left/right margins
 // leftEdge  = BOARD_ORIGIN_X - HEX_WIDTH/2
@@ -695,7 +695,7 @@ const config = {
   backgroundColor: "#0e1626",
   scene: [BattlefieldScene],
   scale: {
-    mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
 };
